@@ -1,0 +1,39 @@
+{% extends "literature/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Редактировать профиль{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Редактировать профиль</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h5>Личные данные</h5>
+                    {{ user_form|crispy }}
+                    
+                    <div class="alert alert-info mt-3">
+                        <strong>Имя пользователя:</strong> {{ user.username }}<br>
+                        Чтобы изменить имя пользователя, обратитесь к администратору.
+                    </div>
+                    
+                    {% if author_form %}
+                        <hr class="my-4">
+                        <h5>Профиль автора</h5>
+                        {{ author_form|crispy }}
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Сохранить изменения</button>
+                        <a href="{% url 'literature:dashboard' %}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

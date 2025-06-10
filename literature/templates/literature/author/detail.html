@@ -1,0 +1,96 @@
+{% extends "literature/base.html" %}
+
+{% block title %}{{ author.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                {% if author.photo %}
+                    <img src="{{ author.photo.url }}" 
+                         alt="{{ author.user.get_full_name }}"
+                         class="author-photo mb-4">
+                {% endif %}
+                <h1>{{ author.user.get_full_name }}</h1>
+                <p class="text-muted">Автор</p>
+                
+                <div class="text-start mt-4">
+                    <h4>Биография</h4>
+                    <p>{{ author.bio|linebreaks }}</p>
+                    
+                    {% if author.birth_date %}
+                        <p><strong>Дата рождения:</strong> {{ author.birth_date|date:"d.m.Y" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Книги автора</h5>
+            </div>
+            <div class="card-body">
+                {% if author.books.all %}
+                    <div class="row">
+                        {% for book in author.books.all %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    {% if book.cover %}
+                                        <img src="{{ book.cover.url }}" 
+                                             class="card-img-top" 
+                                             alt="{{ book.title }}"
+                                             style="height: 200px; object-fit: cover;">
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ book.title }}</h6>
+                                        <p class="card-text small">{{ book.description|truncatewords:15 }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="{% url 'literature:book_detail' book.pk %}" class="btn btn-sm btn-outline-primary">
+                                            Подробнее
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>У этого автора пока нет книг.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Посты об авторе</h5>
+            </div>
+            <div class="card-body">
+                {% if author_posts %}
+                    <div class="list-group">
+                        {% for post in author_posts %}
+                            <a href="{{ post.get_absolute_url }}" 
+                               class="list-group-item list-group-item-action">
+                                {{ post.title }} ({{ post.publish|date:"d.m.Y" }})
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Пока нет постов об этом авторе.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if user == author.user %}
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <a href="{% url 'literature:book_create' %}" class="btn btn-primary mb-2 w-100">Добавить книгу</a>
+                    <a href="{% url 'literature:post_create' %}" class="btn btn-outline-primary w-100">Создать пост</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

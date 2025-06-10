@@ -1,0 +1,2 @@
+.\tenv\Scripts\activate
+cd literature_blog

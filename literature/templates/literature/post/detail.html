@@ -1,0 +1,145 @@
+{% extends "literature/base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <article>
+            <header class="mb-4">
+                <h1 class="fw-bolder mb-1">{{ post.title }}</h1>
+                <div class="text-muted fst-italic mb-2">
+                    Опубликовано {{ post.publish|date:"d.m.Y" }} автором 
+                    <a href="{% url 'literature:author_detail' post.book.author.pk %}">
+                        {{ post.book.author.user.get_full_name }}
+                    </a>
+                </div>
+                <div class="badge bg-secondary text-decoration-none link-light">
+                    {{ post.book.genre.name }}
+                </div>
+            </header>
+            
+            <section class="mb-5">
+                {% if post.book.cover %}
+                    <figure class="mb-4 text-center">
+                        <img class="img-fluid rounded book-cover" 
+                             src="{{ post.book.cover.url }}" 
+                             alt="{{ post.book.title }}">
+                    </figure>
+                {% endif %}
+                
+                <p class="fs-5 mb-4">{{ post.body|linebreaks }}</p>
+            </section>
+        </article>
+        
+        <section class="mb-5">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">О книге</h5>
+                    <p><strong>Название:</strong> <a href="{% url 'literature:book_detail' post.book.pk %}">{{ post.book.title }}</a></p>
+                    <p><strong>Автор:</strong> <a href="{% url 'literature:author_detail' post.book.author.pk %}">
+                        {{ post.book.author.user.get_full_name }}
+                    </a></p>
+                    <p><strong>Год публикации:</strong> {{ post.book.published_date.year }}</p>
+                    <p><strong>Описание:</strong> {{ post.book.description|truncatewords:50 }}</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="mb-5">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Комментарии ({{ post.comments.count }})</h5>
+                    
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'literature:add_comment' pk=post.pk %}">
+                            {% csrf_token %}
+                            <div class="form-group mb-3">
+                                {{ comment_form.body }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Добавить комментарий</button>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <a href="{% url 'login' %}">Войдите</a>, чтобы оставлять комментарии.
+                        </div>
+                    {% endif %}
+                    
+                    {% for comment in post.comments.all %}
+                        {% if comment.active %}
+                            <div class="comment mb-3">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <div class="comment-author">
+                                            {{ comment.author.username }}
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="comment-body">
+                                            {{ comment.body|linebreaks }}
+                                        </div>
+                                        <div class="comment-date text-muted small">
+                                            {{ comment.created|date:"d.m.Y H:i" }}
+                                        </div>
+                                        <div class="comment-body">
+    {{ comment.body|linebreaks }}
+    <div class="comment-actions mt-2">
+        {% if user == comment.author or user.is_superuser %}
+            <form method="post" action="{% url 'literature:delete_comment' comment.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% empty %}
+                        <p>Пока нет комментариев. Будьте первым!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Информация об авторе</h5>
+            </div>
+            <div class="card-body text-center">
+                {% if post.book.author.photo %}
+                    <img src="{{ post.book.author.photo.url }}" 
+                         alt="{{ post.book.author.user.get_full_name }}"
+                         class="author-photo mb-3">
+                {% endif %}
+                <h5>{{ post.book.author.user.get_full_name }}</h5>
+                <p class="text-muted">{{ post.book.author.bio|truncatewords:30 }}</p>
+                <a href="{% url 'literature:author_detail' post.book.author.pk %}" class="btn btn-outline-primary">
+                    Подробнее об авторе
+                </a>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Похожие посты</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for similar_post in similar_posts %}
+                        <a href="{{ similar_post.get_absolute_url }}" 
+                           class="list-group-item list-group-item-action">
+                            {{ similar_post.title }}
+                        </a>
+                    {% empty %}
+                        <p>Нет похожих постов</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

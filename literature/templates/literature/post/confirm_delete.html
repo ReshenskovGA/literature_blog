@@ -1,0 +1,27 @@
+{% extends "literature/base.html" %}
+
+{% block title %}Удалить пост{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="card-title mb-0">Подтверждение удаления</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">Вы уверены, что хотите удалить пост <strong>"{{ post.title }}"</strong>?</p>
+                <p>Это действие нельзя отменить. Все данные, связанные с этим постом, будут удалены навсегда.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger btn-lg">Да, удалить</button>
+                        <a href="{{ post.get_absolute_url }}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

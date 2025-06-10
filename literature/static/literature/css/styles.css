@@ -1,0 +1,535 @@
+/* literature/static/literature/css/styles.css */
+
+/* Глобальные стили */
+:root {
+    --parchment: #f5f1e8;
+    --ink: #3a2e22;
+    --gold: #c8a951;
+    --burgundy: #6d2e46;
+    --sage: #8a9b6e;
+    --shadow: rgba(58, 46, 34, 0.15);
+}
+
+@font-face {
+    font-family: 'Bookish';
+    src: url('fonts/Bookinsanity.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Scroll';
+    src: url('fonts/Dragoniscoming.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Bookish', Georgia, serif;
+    line-height: 1.8;
+    color: var(--ink);
+    background-color: var(--parchment);
+    background-image: url('paper-texture.png');
+    padding-top: 0;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('ink-splatter.png');
+    background-size: 30%;
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    opacity: 0.05;
+    z-index: -1;
+}
+
+/* Навигационная панель */
+.navbar {
+    background-color: var(--burgundy);
+    box-shadow: 0 4px 12px var(--shadow);
+    border-bottom: 3px solid var(--gold);
+    font-family: 'Scroll', cursive;
+    position: relative;
+    z-index: 1000;
+}
+
+.navbar::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 5%;
+    width: 90%;
+    height: 20px;
+    background-image: url('divider.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1001;
+}
+
+.navbar-brand {
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
+    position: relative;
+    padding-right: 40px;
+}
+
+.navbar-brand::after {
+    content: "❧";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.5rem;
+    color: var(--gold);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #e9dcc9;
+    font-size: 1.2rem;
+    padding: 0.5rem 1.2rem;
+    margin: 0 5px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover::before {
+    width: 80%;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--gold);
+    transform: translateY(-3px);
+}
+
+/* Карточки */
+.card {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px var(--shadow);
+    background-color: rgba(245, 241, 232, 0.85);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
+    margin-bottom: 2rem;
+    border-top: 4px solid var(--gold);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--burgundy), var(--sage), var(--gold));
+}
+
+.card:hover {
+    transform: translateY(-10px) rotate(1deg);
+    box-shadow: 0 15px 30px var(--shadow);
+}
+
+.card-header {
+    background: linear-gradient(to right, var(--burgundy), #5a2437);
+    color: #f8f3e6;
+    font-family: 'Scroll', cursive;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--gold);
+    position: relative;
+    padding: 1rem 1.5rem;
+}
+
+.card-header::after {
+    content: "✎";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 1.8rem;
+}
+
+/* Кнопки */
+.btn {
+    border-radius: 30px;
+    padding: 0.5rem 1.8rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+    font-family: 'Scroll', cursive;
+    letter-spacing: 1px;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.btn:hover::before {
+    transform: translateX(0);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--burgundy), #8a3c5a);
+    border-color: var(--gold);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #8a3c5a, var(--burgundy));
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 12px var(--shadow);
+}
+
+.btn-outline-primary {
+    color: var(--burgundy);
+    border-color: var(--burgundy);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    color: white;
+    background: var(--burgundy);
+    transform: translateY(-3px);
+}
+
+/* Заголовки */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Scroll', cursive;
+    color: #d82e70;;
+    text-shadow: 1px 1px 2px var(--shadow);
+    position: relative;
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+}
+
+h1 {
+    font-size: 3rem;
+    letter-spacing: 3px;
+}
+
+h1::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+h2 {
+    font-size: 2.2rem;
+}
+
+h2::before {
+    content: "❦";
+    margin-right: 15px;
+    color: var(--sage);
+}
+
+/* Блок с комментариями */
+.comment {
+    background: rgba(255, 253, 247, 0.7);
+    border-left: 4px solid var(--sage);
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    position: relative;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 3px 3px 8px var(--shadow);
+    transform: perspective(1000px) rotateY(2deg);
+    transition: transform 0.3s ease;
+}
+
+.comment:hover {
+    transform: perspective(1000px) rotateY(0deg);
+}
+
+.comment::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: -25px;
+    font-size: 60px;
+    color: var(--sage);
+    opacity: 0.3;
+    font-family: Georgia, serif;
+    line-height: 1;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: var(--burgundy);
+    display: flex;
+    align-items: center;
+}
+
+.comment-author::before {
+    content: "✍";
+    margin-right: 8px;
+    font-size: 1.2rem;
+    color: var(--gold);
+}
+
+.comment-date {
+    font-size: 0.9rem;
+    color: var(--sage);
+}
+
+/* Формы */
+.form-control {
+    background-color: rgba(255, 253, 247, 0.8);
+    border: 2px solid var(--sage);
+    border-radius: 8px;
+    padding: 0.75rem 1.2rem;
+    font-family: 'Bookish', Georgia, serif;
+    transition: all 0.3s ease;
+    box-shadow: inset 2px 2px 5px var(--shadow);
+}
+
+.form-control:focus {
+    background-color: rgba(255, 253, 247, 0.95);
+    border-color: var(--gold);
+    box-shadow: inset 2px 2px 5px var(--shadow), 0 0 0 0.25rem rgba(200, 169, 81, 0.25);
+}
+
+/* Адаптивные изображения */
+.author-photo {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--gold);
+    box-shadow: 0 4px 12px var(--shadow);
+    position: relative;
+    background: white;
+}
+
+.author-photo::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border: 2px solid var(--sage);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.book-cover {
+    height: 300px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 20px var(--shadow);
+    border: 8px solid white;
+    border-radius: 4px;
+    position: relative;
+    background: white;
+    transform: rotate(1deg);
+    transition: transform 0.4s ease;
+}
+
+.book-cover:hover {
+    transform: rotate(0deg) scale(1.03);
+}
+
+/* Пагинация */
+.pagination .page-item .page-link {
+    color: var(--burgundy);
+    border: 2px solid var(--sage);
+    margin: 0 5px;
+    border-radius: 50% !important;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--burgundy);
+    border-color: var(--burgundy);
+    color: white;
+    transform: scale(1.1);
+}
+
+.pagination .page-item .page-link:hover {
+    background: var(--sage);
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card, .comment, .book-cover, .author-photo {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Декоративные элементы */
+.decorative-corner {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 0;
+    opacity: 0.1;
+}
+
+.corner-tl {
+    top: 0;
+    left: 0;
+    background-image: url('corner-tl.png');
+}
+
+.corner-tr {
+    top: 0;
+    right: 0;
+    background-image: url('corner-tr.png');
+    transform: scaleX(-1);
+}
+
+.corner-bl {
+    bottom: 0;
+    left: 0;
+    background-image: url('corner-bl.png');
+    transform: scaleY(-1);
+}
+
+.corner-br {
+    bottom: 0;
+    right: 0;
+    background-image: url('corner-br.png');
+    transform: scale(-1);
+}
+
+/* Футер */
+footer {
+    background: linear-gradient(to right, var(--burgundy), #5a2437);
+    color: #f8f3e6;
+    padding: 40px 0 20px;
+    margin-top: 50px;
+    position: relative;
+    border-top: 3px solid var(--gold);
+}
+
+footer::before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 5%;
+    width: 90%;
+    height: 20px;
+    background-image: url('divider.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1001;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .book-cover {
+        height: 200px;
+    }
+    
+    .author-photo {
+        width: 100px;
+        height: 100px;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+    
+    .navbar-brand::after {
+        font-size: 1.8rem;
+    }
+}
+
+/* Специальные эффекты для книг */
+.book-card {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+    perspective: 1000px;
+}
+
+.book-card:hover {
+    transform: rotateY(15deg);
+}
+
+.book-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent 50%, rgba(200, 169, 81, 0.1) 100%);
+    pointer-events: none;
+}
+
+/* Эффект перелистывания страницы */
+.page-turn {
+    position: relative;
+}
+
+.page-turn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(200, 169, 81, 0.2));
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform-origin: right center;
+    transform: rotateY(-5deg);
+    transition: transform 0.5s ease;
+}
+
+.page-turn:hover::before {
+    transform: rotateY(-30deg);
+}

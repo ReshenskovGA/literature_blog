@@ -1,0 +1,35 @@
+{% extends "literature/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Добавить книгу{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Добавить новую книгу</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    
+                    <div class="alert alert-info mt-3">
+                        <strong>Автоматически будет установлено:</strong>
+                        <ul>
+                            <li><strong>Автор:</strong> {{ user.get_full_name }}</li>
+                            <li><strong>Дата публикации:</strong> Сегодняшняя дата</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Сохранить книгу</button>
+                        <a href="{% url 'literature:book_list' %}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

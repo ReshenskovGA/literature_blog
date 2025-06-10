@@ -1,0 +1,110 @@
+{% extends "literature/base.html" %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    {% if book.cover %}
+                        <img src="{{ book.cover.url }}" 
+                             class="img-fluid rounded-start" 
+                             alt="{{ book.title }}">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                            <span class="text-muted">Нет обложки</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                   <div class="card-body">
+    <h1 class="card-title">{{ book.title }}</h1>
+    <p class="card-text">
+        <strong>Автор:</strong> 
+        <a href="{% url 'literature:author_detail' book.author.pk %}">
+            {{ book.author.user.get_full_name }}
+        </a>
+    </p>
+                        <p class="card-text">
+                            <strong>Жанр:</strong> {{ book.genre.name }}
+                        </p>
+                        <p class="card-text">
+        <strong>Дата публикации:</strong> {{ book.published_date|date:"d.m.Y" }}
+    </p>
+                        <p class="card-text">{{ book.description|linebreaks }}</p>
+                        <div class="d-flex gap-2 mt-3">
+    <a href="{% url 'literature:book_detail' book.pk %}" class="btn btn-primary">Подробнее</a>
+    {% if user == book.author.user or user.is_superuser %}
+        <a href="{% url 'literature:book_edit' book.pk %}" class="btn btn-outline-secondary">Редактировать</a>
+        <a href="{% url 'literature:book_delete' book.pk %}" class="btn btn-outline-danger">Удалить</a>
+    {% endif %}
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Посты об этой книге</h5>
+            </div>
+            <div class="card-body">
+                {% if book.posts.all %}
+                    <div class="list-group">
+                        {% for post in book.posts.all %}
+                            <a href="{% url 'literature:post_detail' post.pk %}" 
+                               class="list-group-item list-group-item-action">
+                                {{ post.title }} ({{ post.publish|date:"d.m.Y" }})
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Пока нет постов об этой книге.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Об авторе</h5>
+            </div>
+            <div class="card-body text-center">
+                {% if book.author.photo %}
+                    <img src="{{ book.author.photo.url }}" 
+                         alt="{{ book.author.user.get_full_name }}"
+                         class="author-photo mb-3">
+                {% endif %}
+                <h5>{{ book.author.user.get_full_name }}</h5>
+                <p class="text-muted">{{ book.author.bio|truncatewords:30 }}</p>
+                <a href="{% url 'literature:author_detail' book.author.pk %}" class="btn btn-outline-primary">
+                    Подробнее об авторе
+                </a>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Книги того же автора</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for author_book in book.author.books.all %}
+                        {% if author_book != book %}
+                            <a href="{% url 'literature:book_detail' author_book.pk %}" 
+                               class="list-group-item list-group-item-action">
+                                {{ author_book.title }} ({{ author_book.published_date|date:"Y" }})
+                            </a>
+                        {% endif %}
+                    {% empty %}
+                        <p>Других книг этого автора нет</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

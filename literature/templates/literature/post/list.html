@@ -1,0 +1,127 @@
+{% extends "literature/base.html" %}
+
+{% block title %}Литературные посты{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="mb-4">Литературные посты</h1>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <select name="genre" class="form-select">
+                            <option value="">Все жанры</option>
+                            {% for genre in genres %}
+                                <option value="{{ genre.name }}" {% if request.GET.genre == genre.name %}selected{% endif %}>
+                                    {{ genre.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="author" class="form-select">
+                            <option value="">Все авторы</option>
+                            {% for author in authors %}
+                                <option value="{{ author.id }}" {% if request.GET.author == author.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ author.user.get_full_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" 
+                                placeholder="Поиск по названию, содержанию или книге..." 
+                                value="{{ request.GET.search }}">
+                            <button type="submit" class="btn btn-primary">Применить</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        {% for post in posts %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">
+                         <a href="{% url 'literature:post_detail' post.pk %}">{{ post.title }}</a>
+                    </h2>
+                    <p class="text-muted">
+                        Опубликовано {{ post.publish|date:"d.m.Y" }} автором 
+                        <a href="{% url 'literature:author_detail' post.book.author.pk %}">
+                            {{ post.book.author.user.get_full_name }}
+                        </a>
+                    </p>
+                    <p class="card-text">{{ post.body|truncatewords:30|linebreaks }}</p>
+                    <a href="{% url 'literature:post_detail' post.pk %}" class="btn btn-primary">Читать далее →</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Книга: <a href="{% url 'literature:book_detail' post.book.pk %}">{{ post.book.title }}</a> | 
+                    Жанр: {{ post.book.genre.name }}
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-info">Посты не найдены.</div>
+        {% endfor %}
+        
+        {% if is_paginated %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">◄</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                        {% elif num > page_obj.number|add:'-4' and num < page_obj.number|add:'4' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">►</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Популярные жанры</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for genre in genres %}
+                        <a href="?genre={{ genre.name }}" class="list-group-item list-group-item-action">
+                            {{ genre.name }} <span class="badge bg-primary rounded-pill float-end">{{ genre.books.count }}</span>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        {% if user.is_superuser %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Отчеты</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'literature:posts_report_pdf' %}" class="btn btn-outline-danger mb-2 w-100">Скачать PDF отчет</a>
+                    <a href="{% url 'literature:posts_report_excel' %}" class="btn btn-outline-success w-100">Скачать Excel отчет</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

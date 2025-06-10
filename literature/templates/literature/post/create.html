@@ -1,0 +1,49 @@
+{% extends "literature/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Создать новый пост{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Создать новый пост</h4>
+            </div>
+            <div class="card-body">
+                {% if user.author_profile and user.author_profile.books.count == 0 %}
+                    <div class="alert alert-danger">
+                        <h5>У вас нет книг!</h5>
+                        <p>Чтобы создать пост, вам нужно сначала добавить книгу.</p>
+                        <a href="{% url 'literature:book_create' %}" class="btn btn-primary">
+                            Добавить книгу
+                        </a>
+                    </div>
+                {% else %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="alert alert-warning">   
+                        {% if user.author_profile %}
+                        <div class="alert alert-info mt-3">
+        <strong>Важно:</strong> Название поста будет автоматически начинаться с названия выбранной книги.
+    </div>
+                            <div class="alert alert-info mt-3">
+                                <strong>Доступные книги:</strong> {{ user.author_profile.books.count }}
+                                <br>
+                                <strong>Примечание:</strong> Вы можете выбрать только книги из вашего авторского профиля.
+                                Чтобы добавить новую книгу, перейдите в <a href="{% url 'literature:book_create' %}">раздел создания книг</a>.
+                            </div>
+                        {% endif %}
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Опубликовать</button>
+                            <a href="{% url 'literature:post_list' %}" class="btn btn-outline-secondary">Отмена</a>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
